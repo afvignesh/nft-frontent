@@ -12,6 +12,7 @@ const NFT_API = "https://nft-backend-one.vercel.app"
 
 export default function Connect() {
     const [accounts, setAccounts] = useState([]);
+    const [transactionHash, setTransactionHash] = useState([]);
 
     async function connectAccount(){
         if (window.ethereum) {
@@ -38,6 +39,7 @@ export default function Connect() {
                 const response = await contract.mint();
                 console.log("response: ", response)
 
+                setTransactionHash(response.hash)
                 // Transform the data and send it to backend to store it in DB ...
                 let transactionObj = {
                     hashId: response.hash,
@@ -67,6 +69,10 @@ export default function Connect() {
                     <h1 className="text-6xl md:text-5xl sm:text-4xl font-bold text-slate-300">Ethlas NFTs</h1>
                     <p className="text-base md:text-sm text-slate-500 my-5
                     ">Mint your NFTs from here. Just connect your MetaMask account and you are ready to go...</p>
+
+                    {transactionHash.length > 0 && (
+                        <p className="text-base md:text-sm text-slate-500 my-5">Your previous transaction Hash was : <a href={'https://sepolia.etherscan.io/tx/'+transactionHash} target="_blank">{transactionHash}</a></p>
+                    )}
                     
                     {accounts.length > 0 && (
                         <div>
